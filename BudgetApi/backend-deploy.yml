@@ -1,0 +1,36 @@
+﻿---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: budgetimage
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: budgetimage
+    spec:
+      containers:
+        - name: budgetimage
+          image: mischkastrydom/budgetimage:latest
+          ports:
+            - containerPort: 80
+          env:
+            - name: ASPNETCORE_URLS
+              value: http://*:80
+  selector:
+    matchLabels:
+      app: budgetimage
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: budgetimage
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+  selector:
+    app: budgetimage

@@ -1,0 +1,39 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: budgetfrontend
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: budgetfrontend
+    spec:
+      containers:
+        - name: budgetfrontend
+          image: mischkastrydom/budgetfrontend:latest
+          ports:
+            - containerPort: 80
+          env:
+            - name: ASPNETCORE_URLS
+              value: http://*:80
+            - name: backendUrl
+              value: http://budgetimage
+  selector:
+    matchLabels:
+      app: budgetfrontend
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: budgetfrontend
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+  selector:
+    app: budgetfrontend
+
